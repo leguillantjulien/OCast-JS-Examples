@@ -1,0 +1,307 @@
+/*jshint esversion: 6 */
+/*
+ *
+ * Orange Default Receiver
+ *
+ * File name:   receiver.js
+ * Version:     2.0.1
+ *
+ * Copyright (C) 2015 Orange
+ *
+ * This software is confidential and proprietary information of Orange.
+ * You shall not disclose such Confidential Information and shall use it only in
+ * accordance with the terms of the agreement you entered into.
+ * Unauthorized copying of this file, via any medium is strictly prohibited.
+ *
+ * If you are Orange employee you shall use this software in accordance with
+ * the Orange Source Charter ( http://opensource.itn.ftgroup/index.php/Orange_Source ).
+ *
+ */
+
+var Log = ocast.Logger.getInstance();
+Log.setDebugLevel(ocast.Logger.DEBUG);
+
+var currentContainer, osdTimeout,
+    volumeTimeout, isLive = false;
+const TAG = " [OCast Default Receiver] ";
+
+function toTimer(seconds) {
+    var h, m, s;
+
+    h = Math.floor(seconds / 3600);
+    h = isNaN(h) ? '--' : (h >= 10) ? h : '0' + h;
+    m = Math.floor(seconds / 60 % 60);
+    m = isNaN(m) ? '--' : (m >= 10) ? m : '0' + m;
+    s = Math.floor(seconds % 60);
+    s = isNaN(s) ? '--' : (s >= 10) ? s : '0' + s;
+
+    return h + ':' + m + ':' + s;
+}
+function displayHome() {
+    Log.debug(TAG + "displayHome");
+    currentContainer.hide();
+    currentContainer = $('#ready-container');
+    currentContainer.show();
+    Log.debug(TAG + 'displayHome : done.');
+}
+
+function displayPlayer(bool) {
+    Log.debug(TAG + "displayPlayer (" + bool +")");
+    currentContainer.hide();
+    currentContainer = $('#player-container');
+    currentContainer.show();
+    Log.debug(TAG + 'displayPlayer : done.');
+}
+
+function displayImage(bool) {
+    Log.debug(TAG + "displayImage (" + bool +")");
+    currentContainer.hide();
+    currentContainer = $('#image-container');
+    currentContainer.show();
+    Log.debug(TAG + 'displayImage : done.');
+}
+
+function displayError(title, message) {
+    Log.debug(TAG + "displayError", title, message);
+    currentContainer.hide();
+    currentContainer = $('#error-container');
+    currentContainer.show();
+    $('#message-title').text(title);
+    $('#message-description').text(message);
+}
+
+function displayPause(bool) {
+    Log.debug(TAG + "displayPause ", $('state'));
+    if (bool) {
+        $('#state').fadeIn("fast");
+    } else {
+        $('#state').fadeOut("fast");
+    }
+}
+
+function displayOsd(autohide) {
+    Log.debug(TAG + "displayOsd (" + autohide +")");
+    $('#osd').fadeIn("fast");
+    clearTimeout(osdTimeout);
+    if (autohide) {
+        osdTimeout = setTimeout(function () {
+            $('#osd').fadeOut("fast");
+        }, 5000);
+    }
+}
+
+function displayVolume(autohide) {
+    Log.debug(TAG + "displayVolume (" + autohide + ")");
+    $('#volume').fadeIn("fast");
+    clearTimeout(volumeTimeout);
+    if (autohide) {
+        volumeTimeout = setTimeout(function () {
+            $('#volume').fadeOut("fast");
+        }, 2000);
+    }
+}
+
+function displayBuffering(bool) {
+    Log.debug(TAG + "displayBuffering", bool);
+    if (bool) {
+        $('#buffering').fadeIn("fast");
+    } else {
+        $('#buffering').fadeOut("fast");
+    }
+}
+
+
+function clearPlayer() {
+    Log.debug(TAG + "clearPlayer");
+    //clear media
+    var mediaElement = document.getElementById('media');
+    mediaElement.src = '';
+    //reset osd
+    $('#time-current').text('--:--:--');
+    $('#time-total').text('--:--:--');
+    $('#progress-bar').css('width', 0 + '%');
+}
+
+
+var init = function () {
+    var
+        $title = $('#title'),
+        $subtitle = $('#subtitle'),
+        $logo = $('#logo'),
+        $progressBar = $('#progress-bar'),
+        $volumeBar = $('#volume-bar'),
+        $totalTime = $('#time-total'),
+        $currentTime = $('#time-current');
+
+    //set default container as current for transitions
+    currentContainer = $('#ready-container');
+
+    // i18n setup
+    // ---------------------------------------------------------------
+    // I18N, by default use the browser's language (normally english)
+    // If ?setLng=fr is passed in the URL, we use French strings
+    i18n.init({
+        debug: false,
+        lng: (navigator.language) ? navigator.language : navigator.userLanguage,
+        fallbackLng: 'fr',
+        getAsync: false, // Get it synchronously, can't do much without it
+        load: 'unspecific', // Load en instead of en-GB, fr instead of fr-FR
+        useCookie: false
+    });
+    $('#error').append(i18n.t('error.title'));
+
+    // Initialize OCast
+    var _ocast = new ocast.OCast();
+    _ocast.debug = true;
+    // Start Websocket
+    _ocast.start();
+    // Get OCast Channel
+    var mediaChannel = _ocast.getMediaChannel();
+    mediaChannel.addVideoMediaManager([ocast.EnumMedia.AUDIO, ocast.EnumMedia.VIDEO],  document.getElementById('media'));
+    mediaChannel.addImageMediaManager([ocast.EnumMedia.IMAGE],  document.getElementById('img'));
+
+    // Set Callback
+    mediaChannel.setNotifier(this);
+    mediaChannel.doPlaybackStatus = function(){
+        Log.debug(TAG + 'doPlaybackStatus ()');
+    }
+
+
+    // Create a Custom Channel
+    // Create a Custom Channel
+    var CUSTOM_NAMESPACE = "urn:x-cast:sample";
+    var customChannel = _ocast.createChannel(CUSTOM_NAMESPACE);
+    customChannel.onMessage = function(openCastDeviceMessage) {
+        console.log(TAG + "onMessage:"+openCastDeviceMessage.data+" from:"+openCastDeviceMessage.src);
+        // 1- Reply
+        this.sendReply(openCastDeviceMessage.id, openCastDeviceMessage.src, {params: {code: EnumError.OK}});
+        // 2- Display Information
+        clearPlayer();
+        displayError(i18n.t('message.title'), JSON.stringify(openCastDeviceMessage));
+        // 3- Send Specific Command
+        this.sendEvent({customPlayer:"ready"});
+    };
+
+    this.onPrepare = function (url, title, subtitle, logo, mediaType, transferMode, autoplay, frequency, options) {
+        Log.debug(TAG + 'onPrepare(' + url + ',' + mediaType+ ',' +transferMode + ',' + autoplay + ')');
+        switch (mediaType) {
+            case ocast.EnumMedia.AUDIO:
+            case ocast.EnumMedia.VIDEO:
+                // todo: isLive = this.media.isLive;
+                Log.debug(TAG + "onLoad - play audio/video.");
+                displayPlayer(true);
+                var thumbnail = options && options.images && options.images[0] && options.images[0].url ? options.images[0].url : '';
+                $logo.attr('src', thumbnail);
+                if (thumbnail !== '') {
+                    $logo.show();
+                } else {
+                    $logo.hide();
+                }
+                $subtitle.text(subtitle!=null? subtitle : "");
+                $title.text(title != null ? title : "");
+
+                displayOsd(mediaType==='video');
+                break;
+            case ocast.EnumMedia.IMAGE:
+                Log.debug(TAG + "onLoad; show image."+url);
+                displayImage(true);
+                break;
+            default :
+                displayError(i18n.t('error.title'), i18n.t('error.media-error'));
+                console.error(TAG + 'onPrepare; Unknown media type ('+mediaType+') => can not display player.');
+                return ocast.OCastChannel.ERRORS.UNKNOWN_MEDIA_TYPE;
+        }
+
+        Log.debug(TAG + "onLoad; done.");
+        return EnumError.OK;
+    };
+
+    // On Seek Event
+    this.onSeek = function (position, options) {
+        displayOsd(true);
+        displayPause(false);
+        displayBuffering(false);
+        return EnumError.OK;
+    };
+
+
+    // Change Track callback
+    this.onTrack = function (type, trackId, enabled, options) {
+        return EnumError.OK;
+    };
+
+    // Resum Callback
+    this.onResume = function (options) {
+        displayOsd(true);
+        displayPause(false);
+        displayBuffering(false);
+        return EnumError.OK;
+    };
+
+    // On Pause event
+    this.onPause = function () {
+        displayOsd(true);
+        displayPause(true);
+        return EnumError.OK;
+    };
+
+    // On set volume event
+    this.onVolume = function (level) {
+        Log.debug(TAG + "onSetVolume", level);
+        displayVolume(true);
+        console.log("width", (level / 1) * 100, "volumeBar", $volumeBar, $volumeBar.css('width'));
+        $volumeBar.css('width', level / 1 * 100 + '%');
+        return EnumError.OK;
+    };
+
+    // On set mute event
+    this.onMute = function (mute) {
+        return EnumError.OK;
+    };
+
+    // On close event
+    this.onClose = function () {
+        Log.debug(TAG + "onClose");
+        displayHome();
+        return EnumError.OK;
+    };
+
+    // On stop Event
+    this.onStop = function () {
+        Log.debug(TAG + "onStop");
+        displayHome();
+        return EnumError.OK;
+    };
+
+    // On updateStatus
+    this.onUpdateStatus = function (playbackStatus) {
+        Log.debug(TAG + " onUpdateStatus", status);
+        if (playbackStatus instanceof VideoPlaybackStatus) {
+            var current = toTimer(playbackStatus.position),
+                total = toTimer(playbackStatus.duration),
+                percentage = Math.floor((100 / playbackStatus.duration) * playbackStatus.position);
+
+            $currentTime.text(current);
+            if (isLive) {
+                $totalTime.text('');
+            } else {
+                $totalTime.text(total);
+            }
+            $progressBar.css('width', percentage + '%');
+        }
+        switch (playbackStatus.status)  {
+            case ocast.EnumMediaStatus.ERROR:
+                Log.debug(TAG + "onError");
+                displayBuffering(false);
+                $('#osd').hide();
+                displayError(i18n.t('error.title'), i18n.t('error.network-error'));
+                break;
+            case ocast.EnumMediaStatus.BUFFERING:
+                displayBuffering(true);
+            default:
+                displayBuffering(false);
+        }
+    };
+};
+
+$(init);

@@ -1,0 +1,7 @@
+{
+    "error": {
+        "title": "error: ",
+        "network-error": "NETWORK ERROR",
+        "media-error": "MEDIA ERROR"
+    }
+}

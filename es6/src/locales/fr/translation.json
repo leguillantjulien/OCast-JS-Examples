@@ -1,0 +1,11 @@
+{
+    "error": {
+        "title": "erreur: ",
+        "network-error": "NETWORK ERROR",
+        "media-error": "MEDIA ERROR"
+
+    },
+    "message": {
+        "title": "message reçu: "
+    }
+}
