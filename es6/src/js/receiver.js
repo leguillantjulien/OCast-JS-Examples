@@ -283,32 +283,16 @@ var init = function () {
     }
     // On updateStatus
     this.onUpdateStatus = function (playbackStatus) {
-        Log.debug(TAG + " onUpdateStatus", playbackStatus);
+        Log.debug(TAG + " onUpdateStatus(", JSON.stringify(playbackStatus) + ')');
         if (playbackStatus instanceof VideoPlaybackStatus) {
-            var current = toTimer(playbackStatus.position),
-                total = toTimer(playbackStatus.duration),
-                percentage = Math.floor((100 / playbackStatus.duration) * playbackStatus.position);
-
-            $currentTime.text(current);
-            if (isLive) {
-                $totalTime.text('');
-            } else {
-                $totalTime.text(total);
+            switch (playbackStatus.status)  {
+                case EnumMediaStatus.ERROR:
+                    Log.debug(TAG + " onError");
+                    break;
+                case EnumMediaStatus.BUFFERING:
+                    Log.debug(TAG + " onBuffering");
+                default:
             }
-            $progressBar.css('width', percentage + '%');
-        }
-        switch (playbackStatus.status)  {
-            case EnumMediaStatus.ERROR:
-                Log.debug(TAG + "onError");
-                displayBuffering(false);
-                $('#osd').hide();
-                displayError(i18n.t('error.title'), i18n.t('error.network-error'));
-                break;
-            case EnumMediaStatus.BUFFERING:
-                displayBuffering(true);
-            default:
-                displayBuffering(false);
-        }
     };
 };
 

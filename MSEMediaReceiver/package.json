@@ -1,0 +1,31 @@
+{
+  "name": "msemediareceiver",
+  "version": "0.0.1",
+  "description": "Dash.JS compatible OCast Demo Receiver",
+  "main": "gulp",
+  "scripts": {
+    "start": "http-server -p 80",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "devDependencies": {
+    "connect": "^3.6.2",
+    "del": "^2.2.0",
+    "gulp": "^3.9.0",
+    "gulp-clean": "^0.3.1",
+    "gulp-help": "^1.6.1",
+    "gulp-if": "^2.0.2",
+    "gulp-load-plugins": "^1.0.0-rc.1",
+    "gulp-npm-dist": "^0.1.6",
+    "gulp-rename": "^1.2.2",
+    "gulp-replace": "^0.5.4",
+    "opn": "^3.0.3",
+    "run-sequence": "^1.2.2",
+    "serve-static": "^1.12.3",
+    "yargs": "^2.2.1"
+  },
+  "dependencies": {
+    "http-server": "^0.11.1",
+    "ocast-sdk": "1.2.1"
+  }
+}
