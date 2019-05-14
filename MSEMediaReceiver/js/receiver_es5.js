@@ -36,17 +36,17 @@ this.onPrepare = function (url, title, subtitle, logo, mediaType, transferMode, 
   Log.debug(TAG + 'onPrepare(' + url + ',' + mediaType + ',' + transferMode + ',' + autoplay + ',' + frequency +')');
   switch (mediaType) {
     case ocast.EnumMedia.VIDEO:
-      Log.debug(TAG + "onLoad - play audio/video.");
-      player.attachSource(url);
-      player.setTextDefaultEnabled(false);
-      setMediaInfoLabel(title, subtitle, logo);
-      player.on(dashjs.MediaPlayer.events.STREAM_INITIALIZED, startProgressTimer);
-      updateButtonPlaying();
+    Log.debug(TAG + "onLoad - play audio/video.");
+    player.attachSource(url);
+    player.setTextDefaultEnabled(false);
+    setMediaInfoLabel(title, subtitle, logo);
+    player.on(dashjs.MediaPlayer.events.STREAM_INITIALIZED, startProgressTimer);
+    updateButtonPlaying();
     break;
     default :
-      Log.debug(TAG + 'onPrepare; Unknown media type ('+mediaType+') => can not display player.');
-      return ocast.EnumError.UNKNOWN_MEDIA_TYPE;
-    }
+    Log.debug(TAG + 'onPrepare; Unknown media type ('+mediaType+') => can not display player.');
+    return ocast.EnumError.UNKNOWN_MEDIA_TYPE;
+  }
   Log.debug(TAG + "onLoad done.");
   return ocast.EnumError.OK;
 }

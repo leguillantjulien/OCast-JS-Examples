@@ -1,11 +1,11 @@
 'use strict'
 import {
-    EnumError,
-    OCast,
-    Logger,
-    VideoPlaybackStatus,
-    EnumMedia,
-    EnumTrack
+  EnumError,
+  OCast,
+  Logger,
+  VideoPlaybackStatus,
+  EnumMedia,
+  EnumTrack
 } from "https://unpkg.com/ocast-sdk";
 
 const TAG = " [OCast Default Receiver] ";
@@ -48,16 +48,16 @@ let Ocast = {
     Log.debug(TAG + 'onPrepare(' + url + ',' + mediaType + ',' + transferMode + ',' + autoplay + frequency +')');
     switch (mediaType) {
       case EnumMedia.VIDEO:
-        Log.debug(TAG + "onLoad - play audio/video.");
-        player.attachSource(url);
-        player.setTextDefaultEnabled(false);
-        setMediaInfoLabel(title, subtitle, logo);
-        player.on(dashjs.MediaPlayer.events.PLAYBACK_STARTED, startProgressTimer);
-        updateButtonPlaying();
+      Log.debug(TAG + "onLoad - play audio/video.");
+      player.attachSource(url);
+      player.setTextDefaultEnabled(false);
+      setMediaInfoLabel(title, subtitle, logo);
+      player.on(dashjs.MediaPlayer.events.PLAYBACK_STARTED, startProgressTimer);
+      updateButtonPlaying();
       break;
       default :
       Log.debug(TAG + 'onPrepare; Unknown media type ('+mediaType+') => can not display player.');
-        return EnumError.UNKNOWN_MEDIA_TYPE;
+      return EnumError.UNKNOWN_MEDIA_TYPE;
     }
     Log.debug(TAG + "onLoad done.");
     return ocast.EnumError.OK;
