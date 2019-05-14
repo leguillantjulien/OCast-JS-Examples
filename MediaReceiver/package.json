@@ -4,7 +4,7 @@
   "description": "OCast Demo Receiver",
   "main": "gulp",
   "scripts": {
-    "start": "http-server -p 80",
+    "start": "http-server -p 80 --cors -e",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
@@ -25,7 +25,6 @@
     "yargs": "^2.2.1"
   },
   "dependencies": {
-    "http-server": "^0.11.1",
-    "ocast-sdk": "1.2.1"
+    "http-server": "^0.11.1"
   }
 }

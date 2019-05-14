@@ -1,15 +1,15 @@
 
 'use strict'
 import {
-    EnumError,
-    OCast,
-    Logger,
-    VideoPlaybackStatus,
-    EnumMedia,
-    EnumMediaStatus
+  EnumError,
+  OCast,
+  Logger,
+  VideoPlaybackStatus,
+  EnumMedia,
+  EnumMediaStatus
 } from "https://unpkg.com/ocast-sdk";
 
-const TAG = " [OCast Default Receiver] ";
+const TAG = " [Ocast Default Receiver] ";
 const videoPlayer = document.getElementById('videoPlayer');
 const volumeControls = document.querySelector('div.volume_controls');
 const volumeBar = volumeControls.querySelector('.volume-bar');
@@ -22,15 +22,14 @@ const progressBar = document.querySelector('.sbprogress-bar');
 const TIMER_STEP = 1000;
 const DEFAULT_VOLUME = 0.5;
 const OCAST_URL = 'wss://localhost:4433/ocast';
+const Log = Logger.getInstance();
+
 let playerState = EnumMediaStatus.IDLE;
 let currentVolume = DEFAULT_VOLUME;
 let timer = null;
 let currentMediaDuration = -1;
 let currentMediaTime = 0;
-let Log = Logger.getInstance();
 Log.setDebugLevel(Logger.DEBUG);
-
-initMediaPlayer();
 
 let Ocast = {
   initCast: function (){
@@ -38,8 +37,9 @@ let Ocast = {
     ocast.debug = true;
     ocast.start();
 
-    let mediaChannel = ocast.getMediaChannel();
+    let mediaChannel = _getMediaChannel();
     mediaChannel.addVideoMediaManager([EnumMedia.AUDIO, EnumMedia.VIDEO], videoPlayer);
+    videoPlayer.volume = currentVolume;
     mediaChannel.setNotifier(Ocast);
   },
 
@@ -47,31 +47,31 @@ let Ocast = {
     Log.debug(TAG + 'onPrepare(' + url + ',' + mediaType+ ',' +transferMode + ',' + autoplay + frequency +')');
     switch (mediaType) {
       case EnumMedia.VIDEO:
-        Log.debug(TAG + "onLoad - play audio/video.");
-        setMediaInfoLabel(title, subtitle, logo);
-        playerState = EnumMediaStatus.BUFFERING;
-        videoPlayer.addEventListener('loadeddata', startProgressTimer);
-        updateButtonPlaying();
-        displayPlayerControls();
+      Log.debug(TAG + "onLoad - play audio/video.");
+      setMediaInfoLabel(title, subtitle, logo);
+      playerState = EnumMediaStatus.BUFFERING;
+      videoPlayer.addEventListener('loadeddata', startProgressTimer);
+      updateButtonPlaying();
+      displayPlayerControls();
       break;
       default :
-        console.error(TAG + 'onPrepare; Unknown media type ('+mediaType+') => can not display player.');
-        return EnumError.UNKNOWN_MEDIA_TYPE;
-      }
-      Log.debug(TAG + "onLoad done.");
+      console.error(TAG + 'onPrepare; Unknown media type ('+mediaType+') => can not display player.');
+      return EnumError.UNKNOWN_MEDIA_TYPE;
+    }
+    Log.debug(TAG + "onLoad done.");
   },
 
   onUpdateStatus: function (playbackStatus) {
     Log.debug(TAG + " onUpdateStatus(", JSON.stringify(playbackStatus) + ')');
     if (playbackStatus instanceof VideoPlaybackStatus) {
-        switch (playbackStatus.status) {
-            case EnumMediaStatus.ERROR:
-                Log.debug(TAG + " onError");
-                break;
-            case EnumMediaStatus.BUFFERING:
-                Log.debug(TAG + " onBuffering");
-            default:
-        }
+      switch (playbackStatus.status) {
+        case EnumMediaStatus.ERROR:
+        Log.debug(TAG + " onError");
+        break;
+        case EnumMediaStatus.BUFFERING:
+        Log.debug(TAG + " onBuffering");
+        default:
+      }
     }
   },
 
@@ -141,11 +141,6 @@ function setMediaInfoLabel(title,subtitle,thumbnail) {
   (title != null)  ? document.querySelector('.title').innerHTML =  title : '';
   (subtitle != null) ? document.querySelector('.subtitle').innerHTML =  subtitle : '';
   (thumbnail != null) ? document.querySelector('.thumbnail').setAttribute('src', thumbnail) : '';
-}
-
-function initMediaPlayer() {
-  videoPlayer.volume = currentVolume;
-  videoPlayer.addEventListener('mouseenter', displayPlayerControls);
 }
 
 function displayPlayerControls() {
