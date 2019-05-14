@@ -1,4 +1,3 @@
-
 'use strict'
 import {
     EnumError,
@@ -54,15 +53,14 @@ let Ocast = {
         player.setTextDefaultEnabled(false);
         setMediaInfoLabel(title, subtitle, logo);
         player.on(dashjs.MediaPlayer.events.PLAYBACK_STARTED, startProgressTimer);
-        videoPlayer.addEventListener('mouseenter', displayPlayerControls);
-        updateButtonPlaying(true);
-        displayPlayerControls();
+        updateButtonPlaying();
       break;
       default :
       Log.debug(TAG + 'onPrepare; Unknown media type ('+mediaType+') => can not display player.');
         return EnumError.UNKNOWN_MEDIA_TYPE;
-      }
-      Log.debug(TAG + "onLoad done.");
+    }
+    Log.debug(TAG + "onLoad done.");
+    return ocast.EnumError.OK;
   },
 
   onUpdateStatus: function (playbackStatus) {
@@ -75,12 +73,13 @@ let Ocast = {
   onStop: function () {
     Log.debug(TAG + ' onStop');
     player.reset();
+    return ocast.EnumError.OK;
   },
 
   onPause: function () {
     Log.debug(TAG + ' onPause');
-    player.pause();
-    updateButtonPlaying(false);
+    updateButtonPlaying();
+    return ocast.EnumError.OK;
   },
 
   onPlay: function (position) {
@@ -88,30 +87,33 @@ let Ocast = {
     if (position) {
       player.seek(position);
     }
-    player.play();
-    updateButtonPlaying(true);
+    updateButtonPlaying();
+    return ocast.EnumError.OK;
   },
 
   onResume: function () {
     Log.debug(TAG + ' onResume');
     player.play();
-    updateButtonPlaying(true);
+    updateButtonPlaying();
+    return ocast.EnumError.OK;
   },
 
   onSeek: function (position) {
-    Log.debug(TAG + ' onSeek(' +  position + ')');
-    player.seek(position);
+    Log.debug(TAG + ' onSeek(' + position + ')');
+    return ocast.EnumError.OK;
   },
 
   onMute: function (mute) {
     Log.debug(TAG + ' onMute(' +  mute + ')');
     player.setMute(mute);
     displayVolumeControls();
+    return ocast.EnumError.OK;
   },
 
   onClose: function () {
     Log.debug(TAG + ' onClose');
     player.reset();
+    return ocast.EnumError.OK;
   },
 
   onTrack: function (type, trackId, enabled) {
@@ -128,6 +130,7 @@ let Ocast = {
         player.setTextTrack(trackId);
         player.enableText(enabled);
       }
+      return ocast.EnumError.OK;
     }
 
   },
@@ -138,6 +141,7 @@ let Ocast = {
     player.setVolume(currentVolume);
     volumeBar.style.height = currentVolume * 100 + "%";
     displayVolumeControls();
+    return ocast.EnumError.OK;
   },
 
   onUpdateMetadata: function (e) {
@@ -164,7 +168,7 @@ function initMediaPlayer() {
 
 function displayPlayerControls() {
   playerControls.style.opacity = 1;
-  setTimeout(hidePlayerControls, 6000);
+  setTimeout(hidePlayerControls, 10000);
 }
 
 function checkIfPlayerControlsIsDisplayed() {
@@ -184,12 +188,10 @@ function hidePlayerControls(){
   playerControls.style.opacity = 0;
 }
 
-function updateButtonPlaying(isPlaying) {
-  if (!checkIfPlayerControlsIsDisplayed()){
-    displayPlayerControls();
-  };
-  const icon = !isPlaying ? '►' : '❚❚';
+function updateButtonPlaying() {
+  const icon = player.isPaused() ? '►' : '❚❚';
   document.querySelector('.toggle').textContent = icon;
+  displayPlayerControls();
 }
 
 function stopProgressTimer(){
@@ -208,14 +210,13 @@ function resetProgressBar() {
 
 function startProgressTimer() {
   stopProgressTimer();
-  currentMediaDuration = player.duration();
   timer = setInterval(incrementMediaTime, TIMER_STEP);
 };
 
 function incrementMediaTime() {
-  currentMediaTime = player.time();
-
   if (!player.isPaused()) {
+    currentMediaTime = player.time();
+    currentMediaDuration = player.duration();
     if (currentMediaTime < currentMediaDuration) {
       currentMediaTime += 1;
       updateProgressBarByTimer();
@@ -230,7 +231,6 @@ function updateProgressBarByTimer() {
   progressBar.style.width = percentProgress + '%';
   progressTextLeft.innerHTML = player.convertToTimeCode(currentMediaTime);
   progressTextRight.innerHTML = player.convertToTimeCode(currentMediaDuration);
-
 }
 
 function endPlayback(){
