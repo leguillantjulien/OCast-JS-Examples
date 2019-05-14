@@ -25,7 +25,6 @@
     "yargs": "^2.2.1"
   },
   "dependencies": {
-    "http-server": "^0.11.1",
-    "ocast-sdk": "1.2.1"
+    "http-server": "^0.11.1"
   }
 }
