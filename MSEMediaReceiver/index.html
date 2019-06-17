@@ -4,12 +4,12 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
-  <title>OTV Receiver</title>
-  <link rel="stylesheet" href="./css/receiver.css">
+  <title>MSE Media Receiver</title>
+  <link rel="stylesheet" href="/css/receiver.css">
 </head>
 <body>
   <div class='player'>
-    <video id="videoPlayer" class="player_video viewer"></video>
+    <video data-dashjs-player id="videoPlayer" class="player_video viewer"></video>
     <div class="volume_controls">
       <div class="volume-bar"></div>
     </div>
@@ -37,4 +37,7 @@
 
 </body>
 </html>
-<script src='../js/receiver_es6.js' type="module"></script>
+<script src="http://cdn.dashjs.org/latest/dash.all.min.js"></script>
+<script src="/lib/ocast.es5.js"></script>
+<script src="receiver_es5.js"></script>
+

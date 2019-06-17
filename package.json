@@ -4,7 +4,8 @@
   "description": "OCast Demo Receiver",
   "main": "gulp",
   "scripts": {
-    "start": "http-server -p 80 --cors -e",
+    "start:media": "cd MediaReceiver && http-server -p 80 --cors -e",
+    "start:mse": "cd MSEMediaReceiver && http-server -p 80 --cors -e",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",

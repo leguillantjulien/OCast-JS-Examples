@@ -1,7 +1,5 @@
-.idea
-angular/node_modules/
-angular/dist/
-es5/node_modules/
-es5/dist/
-es6/node_modules/
-es6/dist/
+dist/
+node_modules/
+MediaReceiver/dev1
+MSEMediaReceiver/dev1
+package-lock.json
