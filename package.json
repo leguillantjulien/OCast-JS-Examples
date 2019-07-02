@@ -4,8 +4,8 @@
   "description": "OCast Demo Receiver",
   "main": "gulp",
   "scripts": {
-    "start:media": "cd MediaReceiver && http-server -p 80 --cors -e",
-    "start:mse": "cd MSEMediaReceiver && http-server -p 80 --cors -e",
+    "start:media": "node index.js media",
+    "start:mse": "node index.js mse",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
@@ -26,6 +26,6 @@
     "yargs": "^2.2.1"
   },
   "dependencies": {
-    "http-server": "^0.11.1"
+    "express": "^4.17.1"
   }
 }
