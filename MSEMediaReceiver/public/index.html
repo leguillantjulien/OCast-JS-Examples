@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>MSE Media Receiver</title>
+    <link href="../css/receiver.css" rel="stylesheet">
+  </head>
+  <body>
+    <div class='player'>
+      <video id="videoPlayer" class="player_video viewer"></video>
+      <div id="play_btn">
+        <button class="player_button toggle" title="Play">►</button>
+      </div>
+      <div class="volume_controls">
+        <input type="range" min="1" step="5" max="100" value="50" id="volume-bar">
+      </div>
+      <div class="ttl"></div>
+      <div class="player_controls">
+        <div class="info">
+          <img class="thumbnail" src=""/>
+          <p class="title"></p>
+          <p class="subtitle"></p>
+        </div>
+
+        <div class="progressbar_container">
+          <div class="sbprogress-time left"></div>
+          <div class="sbprogress-track">
+            <div class="sbprogress-bar"></div>
+          </div>
+          <div class="sbprogress-time right"></div>
+        </div>
+      </div>
+    </div>
+    <div id="image-container" class="image-container">
+        <img id="img" class="img"/>
+    </div>
+  </body>
+</html>
+<script src="./receiver.js"></script>

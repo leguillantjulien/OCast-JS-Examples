@@ -1,0 +1,30 @@
+{
+  "include":[
+    "src/**/*.ts",
+  ],
+  "exclude": [
+      "node_modules"
+  ],
+  "compilerOptions": {
+    "baseUrl": ".",
+    "sourceMap": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "strictPropertyInitialization": false,
+    "noImplicitAny" : false,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "target": "es5",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "declaration": true,
+    "lib": ["dom", "es2017"],
+    "strict": true,
+    "types": [
+      "node"
+    ],
+    "typeRoots": [
+      "./node_modules/@types"
+    ]
+  }
+}
