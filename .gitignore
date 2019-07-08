@@ -1,5 +1,2 @@
-dist/
+.gitignore
 node_modules/
-MediaReceiver/dev1
-MSEMediaReceiver/dev1
-package-lock.json
