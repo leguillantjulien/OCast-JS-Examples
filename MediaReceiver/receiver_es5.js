@@ -2,7 +2,7 @@
 'use strict';
 const TAG = ' [OCast Receiver] ';
 const TIMER_STEP = 1000;
-const OCAST_URL = 'wss://localhost:4433/ocast';
+const OCAST_URL = 'ws://localhost:4433/ocast';
 let playerState = ocast.EnumMediaStatus.IDLE;
 let timer = null;
 let currentMediaDuration = -1;
