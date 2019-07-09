@@ -1,0 +1,16 @@
+{
+  "name": "mediareceiver",
+  "version": "0.0.1",
+  "description": "OCast Media Demo Receiver",
+  "main": "index.js",
+  "scripts": {
+    "lint": "eslint ./receiver_es5.js",
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Julien Le Guillant",
+  "devDependencies": {
+    "eslint": "^6.0.1",
+    "express": "^4.17.1"
+  }
+}
