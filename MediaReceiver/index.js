@@ -4,6 +4,7 @@ const PORT = 80;
 app.use('/public',express.static(__dirname + '/public'))
 app.use('/fonts',express.static(__dirname + '/fonts'))
 app.use('/lib',express.static(__dirname + '/lib'))
+app.use('/assets',express.static(__dirname + '/assets'))
 app.use(express.static(__dirname + '/'))
 app.use('/dev1', express.static(__dirname + '/')) //set APP_ID
 
