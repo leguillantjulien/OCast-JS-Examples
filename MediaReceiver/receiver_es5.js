@@ -149,13 +149,13 @@ function onStop() {
 }
 
 function onVolumeChange() {
-  Log.debug('<video> onVolumeChange');
+  Log.info('<video> onVolumeChange');
   setVolumeBarValue((videoElement.volume * 100).toString());
   displayVolumeControls();
 }
 
 function onEnd() {
-  Log.debug('<video> onEnd');
+  Log.info('<video> onEnd');
   playerState = ocast.EnumMediaStatus.IDLE;
   stopProgressTimer();
   endPlayback();
@@ -163,12 +163,12 @@ function onEnd() {
 }
 
 function onSeeked() {
-  Log.debug('<video> onSeeked');
+  Log.info('<video> onSeeked');
   hidePlayerControls();
 }
 
 function onSeeking() {
-  Log.debug('<video> onSeeking');
+  Log.info('<video> onSeeking');
   displayPlayerControls(true);
 }
 
