@@ -5,7 +5,7 @@ import { PlayerService } from './PlayerService';
 export class OCastService {
   private playerService: PlayerService;
   private TAG =  ' [OCast Receiver] ';
-  private OCAST_URL =  'ws://localhost:4433/ocast';
+  private OCAST_URL =  'wss://localhost:4433/ocast';
   private videoElement =  document.getElementById('videoPlayer') as HTMLMediaElement;
   private imgElement =  document.getElementById('img') as HTMLMediaElement;
   private logger = Logger.getInstance();
