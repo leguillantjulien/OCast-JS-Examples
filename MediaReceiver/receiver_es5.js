@@ -20,6 +20,7 @@ const btnPlay = document.getElementById('play_btn');
 const titleElement = document.querySelector('.title');
 const subtitleElement = document.querySelector('.subtitle');
 const thumbnailElement = document.querySelector('.thumbnail');
+const loadingAnimation = document.querySelector('.loading_anim');
 
 //  init ocast
 let _ocast = new ocast.OCast(OCAST_URL);
@@ -125,6 +126,7 @@ function onPlaying() {
   Log.info('<video> onPlaying');
   playerState = ocast.EnumMediaStatus.PLAYING;
   updateButtonPlaying();
+  hideLoadingAnimation();
   displayBtnPlayDiv(false);
   displayPlayerControls(false);
 }
@@ -139,6 +141,7 @@ function onPause() {
 
 function onWaiting() {
   Log.info('<video> onWaiting');
+  displayLoadingAnimation();
 }
 
 function onStop() {
@@ -199,13 +202,22 @@ function displayBtnPlayDiv (fix,duration) {
 function displayPlayerControls(fix,duration) {
   playerControls.style.opacity = '1';
   if (!fix) {
-    setTimeout(hidePlayerControls, duration ? duration : 2000);
+    setTimeout(hidePlayerControls, duration ? duration : 4000);
   }
 }
 
 function displayVolumeControls() {
   volumeControls.style.opacity = '1';
   setTimeout(hideVolumeControls, 3000);
+}
+
+function displayLoadingAnimation() {
+  console.log('displayLoadingAnimation');
+  loadingAnimation.style.opacity = '1';
+}
+
+function hideLoadingAnimation() {
+  loadingAnimation.style.opacity = '0';
 }
 
 function hideBtnPlayDiv () {

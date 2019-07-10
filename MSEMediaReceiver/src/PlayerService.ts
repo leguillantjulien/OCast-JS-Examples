@@ -147,7 +147,10 @@ export class PlayerService {
 
       this.videoElement.addEventListener('loadedmetadata', () => this.uiController.onLoadedMetadata(this.mediaInfo));
 
-      this.videoElement.addEventListener('waiting', this.onWaiting);
+      this.videoElement.addEventListener('waiting', () => {
+        this.uiController.onWaiting();
+        this.onWaiting();
+      });
       this.videoElement.addEventListener('stop', this.onStop);
 
       this.videoElement.addEventListener('ended', () => {

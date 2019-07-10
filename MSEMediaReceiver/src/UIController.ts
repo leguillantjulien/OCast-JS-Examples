@@ -9,6 +9,7 @@ export class UIController {
   private progressTextLeft = document.querySelector('.sbprogress-time.left') as HTMLElement;
   private progressTextRight = document.querySelector('.sbprogress-time.right') as HTMLElement;
   private progressBar = document.querySelector('.sbprogress-bar') as HTMLElement;
+  private loadingAnimation = document.querySelector('.loading_anim') as HTMLElement;
   private btnPlay = document.getElementById('play_btn') as HTMLElement;
   private titleElement = document.querySelector('.title') as HTMLElement;
   private subtitleElement = document.querySelector('.subtitle') as HTMLElement;
@@ -24,6 +25,7 @@ export class UIController {
   public onPlaying = () => {
     this.logger.info(this.TAG + '<video> onPlaying');
     this.updateButtonPlaying();
+    this.hideLoadingAnimation();
     this.displayBtnPlayDiv(false);
     this.displayPlayerControls(false);
   }
@@ -37,6 +39,7 @@ export class UIController {
 
   public onWaiting = () => {
     this.logger.info(this.TAG + '<video> onWaiting');
+    this.displayLoadingAnimation();
   }
 
   public onStop = () => {
@@ -113,6 +116,14 @@ export class UIController {
   public displayVolumeControls() {
     this.volumeControls.style.opacity = '1';
     setTimeout(() => { this.hideVolumeControls(); }, 2000, this);
+  }
+
+  public displayLoadingAnimation() {
+    this.loadingAnimation.style.opacity = '1';
+  }
+
+  public hideLoadingAnimation() {
+    this.loadingAnimation.style.opacity = '0';
   }
 
   public hideBtnPlayDiv() {

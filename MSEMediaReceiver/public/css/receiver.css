@@ -183,6 +183,46 @@ div.ttl {
   transform: translate(-50%, -50%);
 }
 
+
+.loading_anim {
+  width: 10vh;
+  height: 10vh;
+  opacity: 0;
+	bottom: 30%;
+	left: 0;
+	right: 0;
+	position: absolute;
+  margin-left: auto;
+  margin-right: auto;
+}
+.loading_anim div {
+  position: absolute;
+  width: 1.5vh;
+  background: #fff;
+  animation: loading_anim 1.2s cubic-bezier(0, 0.5, 0.5, 1) infinite;
+}
+.loading_anim div:nth-child(1) {
+  animation-delay: -0.24s;
+}
+.loading_anim div:nth-child(2) {
+  left: 3vh;
+  animation-delay: -0.12s;
+}
+.loading_anim div:nth-child(3) {
+  left: 6vh;
+  animation-delay: 0;
+}
+@keyframes loading_anim {
+  0% {
+    top: 0.6vh;
+    height: 10vh;
+  }
+  50%, 100% {
+    top: 1.9vh;
+    height: 5vh;
+  }
+}
+
 @media screen and (min-width: 1000px) and (max-width: 3000px) {
 	.thumbnail {
 		width: 100px;
