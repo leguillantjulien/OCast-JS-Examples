@@ -150,6 +150,7 @@ function onStop() {
 
 function onVolumeChange() {
   Log.info('<video> onVolumeChange');
+  console.log('videoElement.volume * 100 ' + videoElement.volume * 100);
   setVolumeBarValue((videoElement.volume * 100).toString());
   displayVolumeControls();
 }

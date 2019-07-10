@@ -9,5 +9,5 @@ app.use(express.static(__dirname + '/'))
 app.use('/dev1', express.static(__dirname + '/')) //set APP_ID
 
 app.listen(PORT, () => {
-  console.log('Server is running at:', PORT);
+  console.log('Server is running at port:', PORT);
 });

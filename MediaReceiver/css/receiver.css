@@ -127,7 +127,7 @@ div .progressbar_container {
 }
 
 .volume_controls {
-	opacity: 0;
+	opacity: 1;
 	left: 0;
 	right: 0;
 	margin-left: auto;
