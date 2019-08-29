@@ -2,7 +2,8 @@
 'use strict';
 const TAG = ' [OCast Receiver] ';
 const TIMER_STEP = 1000;
-const OCAST_URL = 'wss://localhost:4433/ocast';
+const OCAST_SECURE_URL = 'wss://localhost:4433/ocast';
+const OCAST_NOSECURE_URL = 'ws://localhost:4433/ocast';
 let playerState = ocast.EnumMediaStatus.IDLE;
 let timer = null;
 let currentMediaDuration = -1;
@@ -23,7 +24,8 @@ const thumbnailElement = document.querySelector('.thumbnail');
 const loadingAnimation = document.querySelector('.loading_anim');
 
 //  init ocast
-let _ocast = new ocast.OCast(OCAST_URL);
+let wsUrl = getWsUrl();
+const _ocast = new ocast.OCast(wsUrl);
 _ocast.debug = false;
 _ocast.start();
 let Log = ocast.Logger.getInstance();
@@ -300,4 +302,16 @@ function endPlayback(){
   mediaInfo = {};
   stopProgressTimer();
   videoElement.stop;
+}
+
+/** URL utils */
+
+function getWsUrl() {
+  let isSecure = getQueryString('secure');
+  return isSecure === 'true' ? OCAST_SECURE_URL : OCAST_NOSECURE_URL;
+}
+
+function getQueryString(param) {
+  let search = new URLSearchParams(window.location.search);
+  return search.get(param);
 }
