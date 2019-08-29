@@ -1,4 +1,4 @@
-import { EnumError, EnumTrack, IMediaNotifier, Logger } from 'ocast-sdk';
+import { EnumError, EnumTrack, IMediaNotifier, Logger, EnumMedia, EnumTransferMode } from 'ocast-sdk';
 import { PlayerService } from './PlayerService';
 
 export class OrgOCastMediaChannelService implements IMediaNotifier {
@@ -9,7 +9,7 @@ export class OrgOCastMediaChannelService implements IMediaNotifier {
     private playerService: PlayerService) {
   }
 
-  public onPrepare(url, title, subtitle, logo, mediaType, transferMode, autoplay, frequency) {
+  public onPrepare(url: string, title: string, subtitle: string, logo: string, mediaType: EnumMedia, transferMode: EnumTransferMode, autoplay: boolean, frequency:any) {
     this.logger.info(this.TAG + 'onPrepare(' + url + ',' + mediaType + ',' + transferMode +
       ',' + autoplay + ',' + frequency + ')');
     return this.playerService.prepare(url, title, subtitle, logo, mediaType, autoplay).then((isOk) => {
@@ -22,7 +22,7 @@ export class OrgOCastMediaChannelService implements IMediaNotifier {
 }
 
   public onUpdateStatus(playbackStatus) {
-    this.logger.info(this.TAG + ' onUpdateStatus(' + playbackStatus + ')');
+    this.logger.info(this.TAG + ' onUpdateStatus(' + JSON.stringify(playbackStatus, null,2) + ')');
     // not impl
     return EnumError.OK;
   }
@@ -39,7 +39,7 @@ export class OrgOCastMediaChannelService implements IMediaNotifier {
     return EnumError.OK;
   }
 
-  public onPlay(position) {
+  public onPlay(position: number) {
     this.logger.info(this.TAG + ' onPlay(' + position + ')');
     if (position) {
       this.playerService.seek(position);
@@ -52,13 +52,13 @@ export class OrgOCastMediaChannelService implements IMediaNotifier {
     return EnumError.OK;
   }
 
-  public onSeek(position) {
+  public onSeek(position: number) {
     this.logger.info(this.TAG + ' onSeek(' + position + ')');
     this.playerService.seek(position);
     return EnumError.OK;
   }
 
-  public onMute(mute) {
+  public onMute(mute: boolean) {
     this.logger.info(this.TAG + ' onMute(' + mute + ')');
     this.playerService.mute(mute);
     return EnumError.OK;
@@ -90,7 +90,7 @@ export class OrgOCastMediaChannelService implements IMediaNotifier {
   public onVolume(volume: any, options?) {
     this.logger.info(this.TAG + ' onVolume(' + volume + ')');
     const currentVolume = !(volume < 0 || volume > 1) ? volume : 0.5;
-    this.playerService.setVolume(currentVolume);
+    this.playerService.setVolume(currentVolume * 100);
     return EnumError.OK;
   }
 

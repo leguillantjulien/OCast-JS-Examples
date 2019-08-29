@@ -10,7 +10,7 @@ export class PlayerService {
   private initialPlayback: boolean = false;
   private playerReady: boolean = false;
   private firstDashPlayerCreation: boolean = true;
-  private uiController: UIController = new UIController();
+  private uiController: UIController;
   private logger = Logger.getInstance();
   private mediaInfo = {};
 
@@ -23,8 +23,16 @@ export class PlayerService {
     });
   }
 
-  public prepare(url, title, subtitle, logo, mediaType, autoplay) {
-    this.logger.info('this.videoPlayer ' + this.videoPlayer);
+    /**
+   * Prepare to load a new stream
+   * @param url Url of the stream
+   * @param title Title of the stream
+   * @param subtitle Subtitle of the stream
+   * @param logo  Logo of the stream
+   * @param mediaType  Mediatype of the stream
+   * @param autoplay
+   */
+  public prepare(url: string, title: string, subtitle: string, logo: string, mediaType: EnumMedia, autoplay: boolean) {
     switch (mediaType) {
       case EnumMedia.AUDIO:
         this.logger.info(this.TAG + 'onLoad - audio.');
@@ -46,16 +54,31 @@ export class PlayerService {
     }
   }
 
-  public seek(position) {
-    if (position < this.videoElement.duration) {
+  /**
+   * edit the current time position
+   * @param position New video position
+   */
+  public seek(position: number) {
+    if (position != null && position < this.videoElement.duration) {
       this.videoElement.currentTime = position;
     }
   }
 
+  /**
+   * select a track by type and id
+   * @param type Type of the requested track
+   * @param id Id of the track
+   */
   public selectTrackForType(type: string, id: string) {
     return this.videoPlayer.selectTrackForType(type, id);
   }
 
+    /**
+   * set a Track
+   * @param type Type of the loaded track
+   * @param trackId Id of the track
+   * @param enabled enabled or disabled the track
+   */
   public setTrack(type: EnumTrack, trackId: string, enabled: boolean) {
     if (type !== null && trackId !== null && enabled !== null) {
       if (type === EnumTrack.AUDIO || type === EnumTrack.VIDEO) {
@@ -98,6 +121,9 @@ export class PlayerService {
     }
   }
 
+    /**
+   * Stop stream if it's playing
+   */
   public stop(): Promise<void> {
     if (!this.playerReady) {
       return Promise.resolve();
@@ -108,14 +134,23 @@ export class PlayerService {
     });
   }
 
-  public mute(isMuted): void {
+  /**
+   * Mute or un Mute current stream
+   *  @param isMuted
+   */
+  public mute(isMuted: boolean): void {
     this.videoElement.muted = isMuted;
   }
 
+  /**
+ * Pause the current stream
+ */
   public pause(): void {
     this.videoPlayer.pause();
   }
-
+  /**
+ * Play the current stream
+ */
   public play(): void {
     this.videoPlayer.play();
   }
