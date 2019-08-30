@@ -4,14 +4,14 @@ OCast JS SDK implementation using the Dash.JS Player
 All code in this repository is covered by the [Apache-2.0 license](http://www.apache.org/licenses/LICENSE-2.0). See LICENSE file for copyright details.
 
 ## Requirements
--   need to link with dongle to receiver 'd2r' tool
+-   need to link with the stick simulator 'dongletv' tool
 -   node environment
 ## Installation
-install and launch the dongle to receiver d2r tool :
+install and launch the stick simulator tool :
 ```
 https://github.com/Orange-OpenSource/ocast-dongletv-simulator
 npm i -g
-d2r start all
+dongletv start all
 ```
 Clone and install the project :
 ```
@@ -21,6 +21,9 @@ cd MSEMediaReceiver
 ```
 ### Launch
 `npm run start`
+
+- Use query param ?secure=true to use secure WebSockets
+
 ### Build
 `npm run build`
 ### Lint
